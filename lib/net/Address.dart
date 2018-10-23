@@ -1,6 +1,15 @@
 class Address {
-  static const String host = "https://api.github.com/";
 
+
+  static const String WAN_ANDROID_HOST="http://www.wanandroid.com/";
+
+
+  static getHomeArticleList(int page){
+    return "${WAN_ANDROID_HOST}article/list/${page}/json";
+  }
+
+
+  static const String host = "https://api.github.com/";
   ///我的用户信息 GET
   static getMyUserInfo() {
     return "${host}user";

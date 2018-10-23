@@ -212,7 +212,7 @@ abstract class _PriceItem extends StatelessWidget {
 
   final Product product;
 
-  Widget buildItem(BuildContext context, TextStyle style, EdgeInsets padding) {
+  Widget buildItem(BuildContext context, EdgeInsets padding) {
     BoxDecoration decoration;
     if (_shoppingCart[product] != null)
       decoration = BoxDecoration(color: Theme.of(context).primaryColor);
@@ -220,7 +220,9 @@ abstract class _PriceItem extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: decoration,
-      child: Text(product.priceString, style: style),
+      child: Text(
+        product.priceString,
+      ),
     );
   }
 }
@@ -233,7 +235,6 @@ class _ProductPriceItem extends _PriceItem {
   Widget build(BuildContext context) {
     return buildItem(
       context,
-      TextStyle(),
       const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     );
   }

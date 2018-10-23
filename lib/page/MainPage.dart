@@ -15,6 +15,17 @@ class MainPageState extends State<MainPage> with TickerProviderStateMixin {
   int _curIndex = 0;
   BottomNavigationBarType _type = BottomNavigationBarType.fixed;
 
+  initData() {
+    var _body = IndexedStack(
+      children: <Widget>[
+        HomePage(),
+        CloudPage(),
+        MinePage(),
+      ],
+      index: _curIndex,
+    );
+  }
+
   @override
   void initState() {
     super.initState();

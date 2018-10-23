@@ -33,7 +33,7 @@ class UserDao {
     UserInfoDbProvider provider = new UserInfoDbProvider();
 
     next() async {
-      DataResult result;
+      var result;
       if (userName == null) {
         result =
             await HttpManager.fetch(Address.getMyUserInfo(), null, null, null);
@@ -64,6 +64,16 @@ class UserDao {
         return new DataResult(result.data, false);
       }
     }
+
+    if (needDb) {
+      User user = await provider.getUserInfo(userName);
+      if (user == null) {
+        return await next();
+      }
+      DataResult dataResult = new DataResult(user, true, next: next());
+      return dataResult;
+    }
+    return await next();
   }
 
   static getUserStaredCountNet(userName) async {

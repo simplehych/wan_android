@@ -18,9 +18,10 @@ class HttpManager {
 
   static fetch(url, params, Map<String, String> header, Options option,
       {noTip = false}) async {
+    //没有网络
     var connectivityResult = await (new Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      return new ResultData("ERROR", false, ResultCode.NETWORK_ERROR);
+      return new ResultData("", false, ResultCode.NETWORK_ERROR);
     }
 
     Map<String, String> headers = new HashMap();
@@ -28,6 +29,7 @@ class HttpManager {
       headers.addAll(header);
     }
 
+    //授权码
     if (optionParams["authorizationCode"] == null) {
       var authorizationCode = await getAuthorization();
       if (authorizationCode != null) {
@@ -36,76 +38,70 @@ class HttpManager {
     }
 
     headers["Authorization"] = optionParams["authorizationCode"];
+
     if (option != null) {
       option.headers = headers;
-    } else {
+    } else{
       option = new Options(method: "get");
       option.headers = headers;
     }
 
+    ///超时
     option.connectTimeout = 15000;
 
     Dio dio = new Dio();
     Response response;
-
     try {
       response = await dio.request(url, data: params, options: option);
     } on DioError catch (e) {
       Response errorResponse;
-
       if (e.response != null) {
         errorResponse = e.response;
       } else {
         errorResponse = new Response(statusCode: 666);
       }
-
       if (e.type == DioErrorType.CONNECT_TIMEOUT) {
         errorResponse.statusCode = ResultCode.NETWORK_TIMEOUT;
       }
-
       if (Config.DEBUG) {
-        print('请求$url,发生异常${e.toString()}');
+        print('请求异常: ' + e.toString());
+        print('请求异常url: ' + url);
       }
-
-      return new ResultData("ERROR", false, errorResponse.statusCode);
+      return new ResultData("", false, errorResponse.statusCode);
     }
 
     if (Config.DEBUG) {
-      print('请求$url,请求头:${option.headers.toString()}');
+      print('请求url: ' + url);
+      print('请求头: ' + option.headers.toString());
       if (params != null) {
-        print('请求参数 ${params.toString()}');
+        print('请求参数: ' + params.toString());
       }
       if (response != null) {
-        print('返回参数：${response.toString()}');
+        print('返回参数: ' + response.toString());
       }
       if (optionParams["authorizationCode"] != null) {
-        print('authorizationCode:${optionParams["authorizationCode"]}');
+        print('authorizationCode: ' + optionParams["authorizationCode"]);
       }
     }
 
     try {
-      if (option.contentType != null &&
-          option.contentType.primaryType == "text") {
+      if (option.contentType != null && option.contentType.primaryType == "text") {
         return new ResultData(response.data, true, ResultCode.SUCCESS);
       } else {
         var responseJson = response.data;
         if (response.statusCode == 201 && responseJson["token"] != null) {
-          optionParams["authorizationCode"] = 'token ${responseJson["token"]}';
-          await LocalStorage.save(
-              Config.TOKEN_KEY, optionParams["authorizationCode"]);
+          optionParams["authorizationCode"] = 'token ' + responseJson["token"];
+          await LocalStorage.save(Config.TOKEN_KEY, optionParams["authorizationCode"]);
         }
       }
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return new ResultData(response.data, true, ResultCode.SUCCESS,
-            headers: response.headers);
+        return new ResultData(response.data, true, ResultCode.SUCCESS, headers: response.headers);
       }
     } catch (e) {
-      print('${e.toString()} $url');
-      return new ResultData(response.data, false, response.statusCode,
-          headers: response.headers);
+      print(e.toString() + url);
+      return new ResultData(response.data, false, response.statusCode, headers: response.headers);
     }
-
-    return new ResultData("ERROR", false, response.statusCode);
+    return new ResultData("", false, response.statusCode);
   }
 
   static clearAuthorization() {
