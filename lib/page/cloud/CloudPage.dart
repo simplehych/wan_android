@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:wan_andoird/bottom_app_bar.dart';
 import 'package:wan_andoird/dao/DataResult.dart';
 import 'package:wan_andoird/dao/UserDao.dart';
+import 'package:wan_andoird/model/ArticleListData.dart';
 import 'package:wan_andoird/model/ArticleListResult.dart';
+import 'package:wan_andoird/model/HomeBannerResult.dart';
 import 'package:wan_andoird/net/Address.dart';
 import 'package:wan_andoird/net/HttpManager.dart';
 import 'package:wan_andoird/net/ResultData.dart';
 import 'package:wan_andoird/page/MainPage.dart';
+import 'package:wan_andoird/page/cloud/Item.dart';
+import 'package:wan_andoird/widget/SllideView.dart';
 
 class CloudPage extends StatefulWidget {
   @override
@@ -25,12 +29,14 @@ class CloudPageState extends State<CloudPage> {
   var listTotalSize = 0;
 
   ScrollController _controller = new ScrollController();
+  SlideView bannerView;
 
   CloudPageState() {
     _controller.addListener(() {
       var maxScrollExtent = _controller.position.maxScrollExtent;
       var pixels = _controller.position.pixels;
       if (maxScrollExtent == pixels && listData.length < listTotalSize) {
+        print('_controller');
         getList();
       }
     });
@@ -68,41 +74,50 @@ class CloudPageState extends State<CloudPage> {
         itemCount: listData.length + 1,
         controller: _controller,
       );
-      return RefreshIndicator(
+      RefreshIndicator refreshIndicator = RefreshIndicator(
         child: listView,
         onRefresh: _pullToRefresh,
       );
+      return refreshIndicator;
     }
   }
 
-  buildItem(int i) {}
-
-  getBanner() {}
-
-  getList() {
-    getListDao();
-//    getListDao().then((res) {
-//      if (res != null) {
-//        print('getList $res');
-//      }
-//    });
-//    var data = resultData.data;
-//    Map<String, dynamic> map = json.decode(resultData);
-//    var errorCode = map['errorCode'];
-//    var errorMsg = map['errorMsg'];
-//    var da = map['data'];
-//    print('getList da: $da');
+  buildItem(int i) {
+    if (i == 0) {
+      return Container(
+        height: 180.0,
+        child: bannerView,
+      );
+    }
+    i -= 1;
+    return Item(listData[i]);
   }
 
-  getListDao() async {
-    var dio = Dio();
-    Options option = new Options(method: "get");
-    Response response =
-        await dio.request(Address.getHomeArticleList(0), options: option);
-    print('response: ${response.data}');
-    ArticleListResult articleListResult =
-        ArticleListResult.fromJson(response.data as Map<String, dynamic>);
-    print(articleListResult.data.toString());
-    print(articleListResult.data.pageCount);
+  getBanner() async {
+    var res =
+        await HttpManager.fetch(Address.getHomeBanner(), null, null, null);
+    print('getBanner ${res.data}');
+    HomeBannerResult result =
+        HomeBannerResult.fromJson(res.data as Map<String, dynamic>);
+    setState(() {
+      bannerView = SlideView(result.data);
+    });
+  }
+
+  getList() async {
+    var res = await HttpManager.fetch(
+        Address.getHomeArticleList(curPage), null, null, null);
+    ArticleListResult result =
+        ArticleListResult.fromJson(res.data as Map<String, dynamic>);
+    print(result.data);
+    setState(() {
+      listTotalSize = result.data.total;
+      if (curPage == 0) {
+        listData = result.data.datas;
+      } else {
+        listData.addAll(result.data.datas);
+      }
+      curPage++;
+    });
   }
 }

@@ -23,7 +23,7 @@ class NewsData {
   int superChapterId;
   String superChapterName;
   String title;
-  List<Tag> tags;
+//  List<Tag> tags;
   int type;
   int userId;
   int visible;
@@ -46,7 +46,7 @@ class NewsData {
       this.fresh,
       this.id,
       this.link,
-      this.tags,
+//      this.tags,
       this.niceDate,
       this.origin,
       this.projectLink,

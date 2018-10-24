@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wan_andoird/page/cloud/CloudPage.dart';
 import 'package:wan_andoird/page/home/HomePage.dart';
 import 'package:wan_andoird/page/mine/MinePage.dart';
+import 'package:wan_andoird/page/search/SearchPage.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -14,6 +15,8 @@ class MainPageState extends State<MainPage> with TickerProviderStateMixin {
   List<NavigationIconView> _bottomNavigationBarItemList;
   int _curIndex = 0;
   BottomNavigationBarType _type = BottomNavigationBarType.fixed;
+
+  final navigatorKey = GlobalKey<NavigatorState>();
 
   initData() {
     var _body = IndexedStack(
@@ -96,9 +99,21 @@ class MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       home: new Scaffold(
         appBar: AppBar(
           title: Text("WanAndroid"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                navigatorKey.currentState
+                    .push(new MaterialPageRoute(builder: (context) {
+                  return SearchPage();
+                }));
+              },
+            )
+          ],
         ),
         body: Center(
           child: _buildTransitionStack(),

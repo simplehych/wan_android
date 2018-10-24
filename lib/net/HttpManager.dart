@@ -41,7 +41,7 @@ class HttpManager {
 
     if (option != null) {
       option.headers = headers;
-    } else{
+    } else {
       option = new Options(method: "get");
       option.headers = headers;
     }
@@ -85,21 +85,25 @@ class HttpManager {
     }
 
     try {
-      if (option.contentType != null && option.contentType.primaryType == "text") {
+      if (option.contentType != null &&
+          option.contentType.primaryType == "text") {
         return new ResultData(response.data, true, ResultCode.SUCCESS);
       } else {
         var responseJson = response.data;
         if (response.statusCode == 201 && responseJson["token"] != null) {
           optionParams["authorizationCode"] = 'token ' + responseJson["token"];
-          await LocalStorage.save(Config.TOKEN_KEY, optionParams["authorizationCode"]);
+          await LocalStorage.save(
+              Config.TOKEN_KEY, optionParams["authorizationCode"]);
         }
       }
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return new ResultData(response.data, true, ResultCode.SUCCESS, headers: response.headers);
+        return new ResultData(response.data, true, ResultCode.SUCCESS,
+            headers: response.headers);
       }
     } catch (e) {
       print(e.toString() + url);
-      return new ResultData(response.data, false, response.statusCode, headers: response.headers);
+      return new ResultData(response.data, false, response.statusCode,
+          headers: response.headers);
     }
     return new ResultData("", false, response.statusCode);
   }
