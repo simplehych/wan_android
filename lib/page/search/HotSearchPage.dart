@@ -18,7 +18,8 @@ class HotSearchPageState extends State<HotSearchPage> {
   @override
   void initState() {
     super.initState();
-    _refresh();
+    _getRecommendWeb();
+    _getSearchHot();
   }
 
   @override
@@ -78,6 +79,7 @@ class HotSearchPageState extends State<HotSearchPage> {
       hotWidgets.add(item);
     }
     print(hotWidgets.toString());
+    setState(() {});
   }
 
   _getRecommendWeb() async {
@@ -98,12 +100,6 @@ class HotSearchPageState extends State<HotSearchPage> {
       webWidgets.add(item);
     }
     print(webWidgets.toString());
-  }
-
-  _refresh() {
-    setState(() {
-      _getRecommendWeb();
-      _getSearchHot();
-    });
+    setState(() {});
   }
 }

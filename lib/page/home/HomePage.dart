@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wan_andoird/bottom_app_bar.dart';
 import 'package:wan_andoird/net/HttpManager.dart';
-import 'package:wan_andoird/page/MainPage.dart';
+import 'package:wan_andoird/page/MainPageTest.dart';
 import 'package:wan_andoird/page/home/HomeBean.dart';
 import 'package:wan_andoird/page/home/HomeData.dart';
 

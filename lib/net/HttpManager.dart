@@ -41,6 +41,8 @@ class HttpManager {
 
     if (option != null) {
       option.headers = headers;
+      option.data = params;
+      option.extra = params;
     } else {
       option = new Options(method: "get");
       option.headers = headers;
@@ -66,6 +68,9 @@ class HttpManager {
       if (Config.DEBUG) {
         print('请求异常: ' + e.toString());
         print('请求异常url: ' + url);
+        print('请求异常extra: ' + errorResponse.extra.toString());
+        print('请求异常request: ' + errorResponse.request.toString());
+        print('headers: ' + errorResponse.headers.toString());
       }
       return new ResultData("", false, errorResponse.statusCode);
     }

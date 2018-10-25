@@ -5,6 +5,10 @@ class Address {
     return "${WAN_ANDROID_HOST}article/list/$page/json";
   }
 
+  static getSearch(int page) {
+    return "${WAN_ANDROID_HOST}article/query/$page/json";
+  }
+
   static getHomeBanner() {
     return "${WAN_ANDROID_HOST}banner/json";
   }
@@ -17,7 +21,13 @@ class Address {
     return "${WAN_ANDROID_HOST}friend/json";
   }
 
+  static getTree() {
+    return "${WAN_ANDROID_HOST}tree/json";
+  }
 
+  static getArticleList(int page,String cid) {
+    return "${WAN_ANDROID_HOST}article/list/$page/json?cid=$cid";
+  }
 
   static const String host = "https://api.github.com/";
 

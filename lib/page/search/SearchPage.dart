@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wan_andoird/page/search/HotSearchPage.dart';
+import 'package:wan_andoird/page/search/SearchListPage.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
-          autofocus: true,
+          autofocus: false,
           decoration:
               InputDecoration(border: InputBorder.none, hintText: '搜索关键词'),
           controller: _searchController,
@@ -46,7 +47,9 @@ class SearchPageState extends State<SearchPage> {
         ],
       ),
       body: Center(
-        child: HotSearchPage(),
+        child: (true)
+            ? Center(child: HotSearchPage())
+            : Center(child: SearchListPage()),
       ),
     );
   }

@@ -11,7 +11,7 @@ import 'package:wan_andoird/model/HomeBannerResult.dart';
 import 'package:wan_andoird/net/Address.dart';
 import 'package:wan_andoird/net/HttpManager.dart';
 import 'package:wan_andoird/net/ResultData.dart';
-import 'package:wan_andoird/page/MainPage.dart';
+import 'package:wan_andoird/page/MainPageTest.dart';
 import 'package:wan_andoird/page/cloud/Item.dart';
 import 'package:wan_andoird/widget/SllideView.dart';
 

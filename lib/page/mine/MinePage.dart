@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wan_andoird/bottom_app_bar.dart';
-import 'package:wan_andoird/page/MainPage.dart';
+import 'package:wan_andoird/page/MainPageTest.dart';
 
 class MinePage extends StatelessWidget {
   @override
